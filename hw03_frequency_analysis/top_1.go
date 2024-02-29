@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// Top10Old returns the 10 most frequently occurring words.
-func Top10_first(text string) []string {
+// Top10First returns the 10 most frequently occurring words.
+func Top10First(text string) []string {
 	parseWords := splitWithOrWithoutAsterisk(taskWithAsteriskIsCompleted, text)
 	counters := make(map[string]int)
 
