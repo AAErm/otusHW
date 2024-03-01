@@ -43,3 +43,91 @@ func TestUnpackInvalidString(t *testing.T) {
 		})
 	}
 }
+
+func Test_nextIsInt(t *testing.T) {
+	type args struct {
+		s string
+		i int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "EOF",
+			args: args{
+				s: "qw4",
+				i: 2,
+			},
+			want: false,
+		},
+		{
+			name: "next is int",
+			args: args{
+				s: "qw4",
+				i: 1,
+			},
+			want: true,
+		},
+		{
+			name: "next is not int",
+			args: args{
+				s: "qw4",
+				i: 0,
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := nextIsInt(tt.args.s, tt.args.i); got != tt.want {
+				t.Errorf("nextIsNotInt() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_prevIsRepeated(t *testing.T) {
+	type args struct {
+		s string
+		i int
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "prev is empty",
+			args: args{
+				s: "4wa",
+				i: 0,
+			},
+			want: false,
+		},
+		{
+			name: "prev is int",
+			args: args{
+				s: "4wa",
+				i: 1,
+			},
+			want: false,
+		},
+		{
+			name: "prev is not int",
+			args: args{
+				s: "4wa",
+				i: 2,
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := prevIsRepeated(tt.args.s, tt.args.i); got != tt.want {
+				t.Errorf("prevIsRepeated() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
