@@ -7,7 +7,7 @@ import (
 )
 
 // Change to true if needed.
-var taskWithAsteriskIsCompleted = false
+// var taskWithAsteriskIsCompleted = false
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
 	другом   Кристофером   Робином,   головой   вниз,  пересчитывая
@@ -79,4 +79,25 @@ func TestTop10(t *testing.T) {
 			require.Equal(t, expected, Top10(text))
 		}
 	})
+}
+
+// BenchmarkTop10-16    	   15885	     72691 ns/op	   47966 B/op	     444 allocs/op.
+func BenchmarkTop10(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = Top10(text)
+	}
+}
+
+// BenchmarkTop10Old-16    	   15968	     75202 ns/op	   41442 B/op	      19 allocs/op.
+func BenchmarkTop10_1(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = Top10First(text)
+	}
+}
+
+// BenchmarkTop10New-16    	   25294	     46147 ns/op	   37067 B/op	      24 allocs/op.
+func BenchmarkTop10_2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = Top10Second(text)
+	}
 }
