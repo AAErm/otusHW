@@ -1,9 +1,7 @@
 package hw03frequencyanalysis
 
-var maxWord = 10
-
-// Top10_2 returns the 10 most frequently occurring words.
-func Top10_2(text string) []string {
+// Top10Second returns the 10 most frequently occurring words.
+func Top10Second(text string) []string {
 	parseWords := splitWithOrWithoutAsterisk(taskWithAsteriskIsCompleted, text)
 	counters := make(map[string]int)
 	for _, word := range parseWords {

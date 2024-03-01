@@ -4,6 +4,8 @@ import (
 	"container/heap"
 )
 
+const maxWord = 10
+
 var taskWithAsteriskIsCompleted = false
 
 type wordCount struct {
@@ -34,10 +36,8 @@ func (h *wordHeap) Push(x interface{}) {
 
 func (h *wordHeap) Pop() interface{} {
 	old := *h
-	n := len(old)
-	x := old[n-1]
-	*h = old[0 : n-1]
-	return x
+	*h = old[0 : len(old)-1]
+	return old[len(old)-1]
 }
 
 // Top10 returns the 10 most frequently occurring words.

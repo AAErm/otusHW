@@ -98,6 +98,6 @@ func BenchmarkTop10_1(b *testing.B) {
 // BenchmarkTop10New-16    	   25294	     46147 ns/op	   37067 B/op	      24 allocs/op.
 func BenchmarkTop10_2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = Top10_2(text)
+		_ = Top10Second(text)
 	}
 }
