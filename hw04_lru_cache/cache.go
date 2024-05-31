@@ -18,6 +18,19 @@ type lruCache struct {
 	mu       sync.Mutex
 }
 
+type cacheItem struct {
+	key   Key
+	value interface{}
+}
+
+func (ci *cacheItem) GetKey() Key {
+	return ci.key
+}
+
+func (ci *cacheItem) GetValue() interface{} {
+	return ci.value
+}
+
 func NewCache(capacity int) Cache {
 	return &lruCache{
 		capacity: capacity,
@@ -27,38 +40,30 @@ func NewCache(capacity int) Cache {
 }
 
 func (l *lruCache) Set(key Key, value interface{}) bool {
-	v, ok := value.(int)
-	if !ok {
-		return false
-	}
-
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	_, ok = l.items[key]
+	_, ok := l.items[key]
 	if ok {
-		l.items[key].Value = v
+		l.items[key].Value = &cacheItem{key, value}
 		l.queue.MoveToFront(l.items[key])
 
 		return true
 	}
 
-	item := l.queue.PushFront(v)
+	item := l.queue.PushFront(&cacheItem{key, value})
 	l.items[key] = item
 	if l.queue.Len() <= l.capacity {
 		return false
 	}
 
 	back := l.queue.Back()
-	l.queue.Remove(back)
-	for key, val := range l.items {
-		if val != back {
-			continue
-		}
-
-		delete(l.items, key)
-		break
+	ci, ok := back.Value.(*cacheItem)
+	if !ok {
+		panic("invalidate cache value")
 	}
+	delete(l.items, ci.key)
+	l.queue.Remove(back)
 
 	return false
 }
@@ -68,13 +73,17 @@ func (l *lruCache) Get(key Key) (interface{}, bool) {
 	defer l.mu.Unlock()
 
 	value, ok := l.items[key]
-	if ok {
-		l.queue.MoveToFront(l.items[key])
-
-		return value.Value, true
+	if !ok {
+		return nil, false
 	}
 
-	return nil, false
+	l.queue.MoveToFront(l.items[key])
+	ci, ok := value.Value.(*cacheItem)
+	if !ok {
+		panic("invalidate cache value")
+	}
+
+	return ci.GetValue(), true
 }
 
 func (l *lruCache) Len() int {
@@ -86,8 +95,6 @@ func (l *lruCache) Len() int {
 func (l *lruCache) Clear() {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	for key := range l.items {
-		delete(l.items, key)
-	}
+	l.items = map[Key]*ListItem{}
 	l.queue.Clear()
 }

@@ -1,7 +1,5 @@
 package hw04lrucache
 
-import "sync"
-
 type List interface {
 	Len() int                          // длина списка
 	Front() *ListItem                  // первый элемент списка
@@ -23,7 +21,6 @@ type list struct {
 	first  *ListItem
 	end    *ListItem
 	length int
-	mu     sync.RWMutex
 }
 
 func NewList() List {
@@ -31,48 +28,18 @@ func NewList() List {
 }
 
 func (l *list) Len() int {
-	l.mu.RLock()
-	defer l.mu.RUnlock()
 	return l.length
 }
 
 func (l *list) Front() *ListItem {
-	l.mu.RLock()
-	defer l.mu.RUnlock()
 	return l.first
 }
 
 func (l *list) Back() *ListItem {
-	l.mu.RLock()
-	defer l.mu.RUnlock()
-
 	return l.end
 }
 
-// func (l *list) PushFront(v interface{}) *ListItem {
-// 	l.mu.Lock()
-// 	defer l.mu.Unlock()
-
-// 	item := &ListItem{Value: v}
-// 	l.length++
-// 	if l.length == 1 {
-// 		l.first = item
-// 		l.end = item
-
-// 		return item
-// 	}
-
-// 	item.Next = l.first
-// 	l.first.Prev = item
-// 	l.first = item
-
-// 	return item§
-// }
-
 func (l *list) PushFront(v interface{}) *ListItem {
-	l.mu.Lock()
-	defer l.mu.Unlock()
-
 	item := &ListItem{Value: v, Next: l.first}
 	if l.first != nil {
 		l.first.Prev = item
@@ -85,30 +52,7 @@ func (l *list) PushFront(v interface{}) *ListItem {
 	return item
 }
 
-// func (l *list) PushBack(v interface{}) *ListItem {
-// 	l.mu.Lock()
-// 	defer l.mu.Unlock()
-
-// 	item := &ListItem{Value: v}
-// 	l.length++
-// 	if l.length == 1 {
-// 		l.first = item
-// 		l.end = item
-
-// 		return item
-// 	}
-
-// 	item.Prev = l.end
-// 	l.end.Next = item
-// 	l.end = item
-
-// 	return item
-// }
-
 func (l *list) PushBack(v interface{}) *ListItem {
-	l.mu.Lock()
-	defer l.mu.Unlock()
-
 	item := &ListItem{Value: v, Prev: l.end}
 	if l.end != nil {
 		l.end.Next = item
@@ -122,9 +66,6 @@ func (l *list) PushBack(v interface{}) *ListItem {
 }
 
 func (l *list) Remove(i *ListItem) {
-	l.mu.Lock()
-	defer l.mu.Unlock()
-
 	if i.Prev != nil {
 		i.Prev.Next = i.Next
 	} else {
@@ -140,9 +81,6 @@ func (l *list) Remove(i *ListItem) {
 }
 
 func (l *list) MoveToFront(i *ListItem) {
-	l.mu.Lock()
-	defer l.mu.Unlock()
-
 	if i == l.first {
 		return
 	}
@@ -173,9 +111,6 @@ func (l *list) MoveToFront(i *ListItem) {
 }
 
 func (l *list) Clear() {
-	l.mu.Lock()
-	defer l.mu.Unlock()
-
 	l.first = nil
 	l.end = nil
 	l.length = 0
