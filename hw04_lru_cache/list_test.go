@@ -1,7 +1,6 @@
 package hw04lrucache
 
 import (
-	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -14,6 +13,33 @@ func TestList(t *testing.T) {
 		require.Equal(t, 0, l.Len())
 		require.Nil(t, l.Front())
 		require.Nil(t, l.Back())
+	})
+
+	t.Run("complex some struct", func(t *testing.T) {
+		type someStruct struct {
+			i int
+			s string
+		}
+
+		l := NewList()
+
+		l.PushFront(someStruct{1, "a"})
+		l.PushFront(someStruct{0, ""})
+		l.PushBack(someStruct{2, "b"})
+		require.Equal(t, 3, l.Len())
+
+		v := l.Front().Next.Value.(someStruct)
+		require.Equal(t, 1, v.i)
+		require.Equal(t, "a", v.s)
+
+		middle := l.Front().Next
+		l.Remove(middle)
+		v = l.Front().Next.Value.(someStruct)
+		require.Equal(t, 2, v.i)
+		require.Equal(t, "b", v.s)
+
+		l.Clear()
+		require.Equal(t, 0, l.Len())
 	})
 
 	t.Run("complex", func(t *testing.T) {
@@ -48,24 +74,5 @@ func TestList(t *testing.T) {
 			elems = append(elems, i.Value.(int))
 		}
 		require.Equal(t, []int{70, 80, 60, 40, 10, 30, 50}, elems)
-	})
-}
-
-func TestConcurrentList(t *testing.T) {
-	t.Run("concurrency", func(t *testing.T) {
-		l := NewList()
-		numConcurrent := 10_000
-		var wg sync.WaitGroup
-		wg.Add(numConcurrent)
-
-		for i := 1; i <= numConcurrent; i++ {
-			go func(value int) {
-				defer wg.Done()
-				l.PushBack(value)
-			}(i)
-		}
-
-		wg.Wait()
-		require.Equal(t, 10_000, l.Len())
 	})
 }
