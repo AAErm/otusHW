@@ -45,7 +45,10 @@ func (l *lruCache) Set(key Key, value interface{}) bool {
 
 	_, ok := l.items[key]
 	if ok {
-		l.items[key].Value = &cacheItem{key, value}
+		l.items[key].Value = &cacheItem{
+			key:   key,
+			value: value,
+		}
 		l.queue.MoveToFront(l.items[key])
 
 		return true
@@ -58,10 +61,7 @@ func (l *lruCache) Set(key Key, value interface{}) bool {
 	}
 
 	back := l.queue.Back()
-	ci, ok := back.Value.(*cacheItem)
-	if !ok {
-		panic("invalidate cache value")
-	}
+	ci := back.Value.(*cacheItem)
 	delete(l.items, ci.key)
 	l.queue.Remove(back)
 
