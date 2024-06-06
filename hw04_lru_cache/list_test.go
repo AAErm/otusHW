@@ -15,6 +15,33 @@ func TestList(t *testing.T) {
 		require.Nil(t, l.Back())
 	})
 
+	t.Run("complex some struct", func(t *testing.T) {
+		type someStruct struct {
+			i int
+			s string
+		}
+
+		l := NewList()
+
+		l.PushFront(someStruct{1, "a"})
+		l.PushFront(someStruct{0, ""})
+		l.PushBack(someStruct{2, "b"})
+		require.Equal(t, 3, l.Len())
+
+		v := l.Front().Next.Value.(someStruct)
+		require.Equal(t, 1, v.i)
+		require.Equal(t, "a", v.s)
+
+		middle := l.Front().Next
+		l.Remove(middle)
+		v = l.Front().Next.Value.(someStruct)
+		require.Equal(t, 2, v.i)
+		require.Equal(t, "b", v.s)
+
+		l.Clear()
+		require.Equal(t, 0, l.Len())
+	})
+
 	t.Run("complex", func(t *testing.T) {
 		l := NewList()
 
