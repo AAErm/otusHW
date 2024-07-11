@@ -46,7 +46,6 @@ func validateInt(validator, name string, value int64) error {
 				Field: name,
 				Err:   ErrInvalidRule,
 			})
-
 		}
 	}
 
