@@ -7,20 +7,19 @@ import (
 
 func validateSlice(validator, name string, value reflect.Value) error {
 	elem := value.Type().Elem()
-	switch elem.Kind() {
-	case reflect.Int:
+	if elem.Kind() == reflect.Int {
 		values, ok := value.Interface().([]int64)
 		if !ok {
 			return ErrNotSupportedType
 		}
-
 		return validateSliceInt(validator, name, values)
-	case reflect.String:
+	}
+
+	if elem.Kind() == reflect.String {
 		values, ok := value.Interface().([]string)
 		if !ok {
 			return ErrNotSupportedType
 		}
-
 		return validateSliceString(validator, name, values)
 	}
 
