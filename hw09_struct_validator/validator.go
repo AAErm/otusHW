@@ -50,6 +50,7 @@ func Validate(v interface{}) error {
 		}
 		fieldValue := reflectValue.Field(i)
 
+		//nolint:exhaustive
 		switch fieldValue.Kind() {
 		case reflect.Int:
 			if err := validateInt(validator, field.Name, fieldValue.Int()); err != nil {
