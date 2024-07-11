@@ -21,7 +21,7 @@ type EnvValue struct {
 func ReadDir(dir string) (Environment, error) {
 	st, err := os.Stat(dir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get stat %s with error %s", dir, err.Error())
+		return nil, fmt.Errorf("failed to get stat %s with error %w", dir, err)
 	}
 
 	if !st.IsDir() {
@@ -30,7 +30,7 @@ func ReadDir(dir string) (Environment, error) {
 
 	dirEntries, err := os.ReadDir(dir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read dir %s with error %s", dir, err.Error())
+		return nil, fmt.Errorf("failed to read dir %s with error %w", dir, err)
 	}
 
 	env := make(Environment)
@@ -40,7 +40,7 @@ func ReadDir(dir string) (Environment, error) {
 
 		file, err := os.Open(filepath)
 		if err != nil {
-			return nil, fmt.Errorf("failed to open file %s with err %s", filepath, err.Error())
+			return nil, fmt.Errorf("failed to open file %s with err %w", filepath, err)
 		}
 		defer file.Close()
 
