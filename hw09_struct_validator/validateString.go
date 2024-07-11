@@ -61,9 +61,11 @@ func validateLen(valRule, value string) error {
 	if err != nil {
 		return ErrInvalidRule
 	}
+
 	if len(value) != valLen {
 		return ErrInvalidValue
 	}
+
 	return nil
 }
 
@@ -72,9 +74,11 @@ func validateRegexp(valRule, value string) error {
 	if err != nil {
 		return ErrInvalidRule
 	}
+
 	if !reg.MatchString(value) {
 		return ErrInvalidValue
 	}
+
 	return nil
 }
 
@@ -83,6 +87,7 @@ func validateInStr(valRule, value string) error {
 	if !inStr(valIn, value) {
 		return ErrInvalidValue
 	}
+
 	return nil
 }
 
@@ -92,6 +97,7 @@ func inStr(arr []string, str string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -100,10 +106,12 @@ func keyValueRule(rule string) (string, string, error) {
 	if len(ruleParts) <= 1 {
 		return "", "", ErrInvalidRule
 	}
+
 	keyRule := strings.Split(rule, ":")[0]
 	valRule := strings.Split(rule, ":")[1]
 	if len(ruleParts) > 2 {
 		valRule = strings.Join(strings.Split(rule, ":")[1:], "")
 	}
+
 	return keyRule, valRule, nil
 }

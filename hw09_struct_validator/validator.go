@@ -72,7 +72,6 @@ func Validate(v interface{}) error {
 					Err:   err,
 				})
 			}
-
 		default:
 			return ErrNotSupportedType
 		}

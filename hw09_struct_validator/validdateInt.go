@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+//nolint:errcheck
 func validateInt(validator, name string, value int64) error {
 	rules := strings.Split(validator, "|")
 	validationErrors := make(ValidationErrors, 0)
@@ -17,6 +18,7 @@ func validateInt(validator, name string, value int64) error {
 			})
 			continue
 		}
+
 		switch keyRule {
 		case "min":
 			if err := validateMin(valRule, value); err != nil {
@@ -60,9 +62,11 @@ func validateMin(valRule string, value int64) error {
 	if err != nil {
 		return ErrInvalidRule
 	}
+
 	if intValRul >= value {
 		return ErrInvalidValue
 	}
+
 	return nil
 }
 
@@ -71,9 +75,11 @@ func validateMax(valRule string, value int64) error {
 	if err != nil {
 		return ErrInvalidRule
 	}
+
 	if intValRul <= value {
 		return ErrInvalidValue
 	}
+
 	return nil
 }
 
@@ -83,9 +89,11 @@ func validateInInt(valRule string, value int64) error {
 	if err != nil {
 		return ErrInvalidRule
 	}
+
 	if !inInt(intValIn, value) {
 		return ErrInvalidValue
 	}
+
 	return nil
 }
 
@@ -96,8 +104,10 @@ func intValIn(strs []string) ([]int64, error) {
 		if err != nil {
 			return nil, ErrInvalidRule
 		}
+
 		res = append(res, val)
 	}
+
 	return res, nil
 }
 
@@ -107,5 +117,6 @@ func inInt(arr []int64, str int64) bool {
 			return true
 		}
 	}
+
 	return false
 }
