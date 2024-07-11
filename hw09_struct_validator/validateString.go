@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+//nolint:dupl
 func validateString(validator, name string, value string) error {
 	rules := strings.Split(validator, "|")
 	validationErrors := make(ValidationErrors, 0)

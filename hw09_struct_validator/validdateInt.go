@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-//nolint:errcheck
+//nolint:dupl
 func validateInt(validator, name string, value int64) error {
 	rules := strings.Split(validator, "|")
 	validationErrors := make(ValidationErrors, 0)
