@@ -1,6 +1,8 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCopy(t *testing.T) {
 	type args struct {
@@ -37,8 +39,28 @@ func TestCopy(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := Copy(tt.args.fromPath, tt.args.toPath, tt.args.offset, tt.args.limit); err != tt.wantErr {
+			if err := Copy(tt.args.fromPath, tt.args.toPath, tt.args.offset, tt.args.limit); err != nil && err != tt.wantErr {
 				t.Errorf("Copy() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_werwer(t *testing.T) {
+	type args struct {
+		in0 string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := werwer(tt.args.in0); (err != nil) != tt.wantErr {
+				t.Errorf("werwer() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

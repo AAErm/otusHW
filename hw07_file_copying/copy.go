@@ -17,7 +17,7 @@ var (
 func Copy(fromPath, toPath string, offset, limit int64) error {
 	st, err := os.Stat(fromPath)
 	if err != nil {
-		return fmt.Errorf("failed to get stat %s with error %s", fromPath, err.Error())
+		return fmt.Errorf("failed to get stat %s with error %w", fromPath, err)
 	}
 
 	if st.IsDir() {
@@ -30,20 +30,20 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 
 	fileFrom, err := os.Open(fromPath)
 	if err != nil {
-		return fmt.Errorf("failed to open file %s, %s", fromPath, err.Error())
+		return fmt.Errorf("failed to open file %s, %w", fromPath, err)
 	}
 	defer fileFrom.Close()
 
 	if offset > 0 {
 		_, err := fileFrom.Seek(offset, 0)
 		if err != nil {
-			return fmt.Errorf("failed to seek file %s", err.Error())
+			return fmt.Errorf("failed to seek file %w", err)
 		}
 	}
 
 	fileTo, err := os.Create(toPath)
 	if err != nil {
-		return fmt.Errorf("failed to create temp file %s, %s", toPath+"/"+fileFrom.Name(), err.Error())
+		return fmt.Errorf("failed to create temp file %s, %w", toPath+"/"+fileFrom.Name(), err)
 	}
 	defer fileTo.Close()
 
@@ -56,9 +56,13 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	barReader := bar.NewProxyReader(reader)
 	_, err = io.CopyN(fileTo, barReader, toRead)
 	if err != nil {
-		return fmt.Errorf("failed to copy %d bytes with error %s", toRead, err.Error())
+		return fmt.Errorf("failed to copy %d bytes with error %w", toRead, err)
 	}
 	bar.Finish()
 
+	return nil
+}
+
+func werwer(string) error {
 	return nil
 }
