@@ -62,7 +62,3 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 
 	return nil
 }
-
-func werwer(string) error {
-	return nil
-}
