@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestCopy(t *testing.T) {
@@ -12,9 +14,9 @@ func TestCopy(t *testing.T) {
 		limit    int64
 	}
 	tests := []struct {
-		name    string
-		args    args
-		wantErr error
+		name        string
+		args        args
+		expectedErr error
 	}{
 		{
 			name: "unsupported file if isDir",
@@ -24,7 +26,7 @@ func TestCopy(t *testing.T) {
 				offset:   0,
 				limit:    0,
 			},
-			wantErr: ErrUnsupportedFile,
+			expectedErr: ErrUnsupportedFile,
 		},
 		{
 			name: "offset exceeds file size",
@@ -34,34 +36,13 @@ func TestCopy(t *testing.T) {
 				offset:   9999999,
 				limit:    0,
 			},
-			wantErr: ErrOffsetExceedsFileSize,
+			expectedErr: ErrOffsetExceedsFileSize,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := Copy(tt.args.fromPath, tt.args.toPath, tt.args.offset, tt.args.limit); err != nil && err != tt.wantErr {
-				t.Errorf("Copy() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func Test_werwer(t *testing.T) {
-	type args struct {
-		in0 string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := werwer(tt.args.in0); (err != nil) != tt.wantErr {
-				t.Errorf("werwer() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := Copy(tt.args.fromPath, tt.args.toPath, tt.args.offset, tt.args.limit)
+			require.Error(t, tt.expectedErr, err)
 		})
 	}
 }

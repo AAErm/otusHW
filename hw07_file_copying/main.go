@@ -21,6 +21,6 @@ func main() {
 	flag.Parse()
 	err := Copy(from, to, offset, limit)
 	if err != nil {
-		fmt.Printf("failed to copy file %w", err)
+		fmt.Printf("failed to copy file %v", err)
 	}
 }
