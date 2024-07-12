@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -35,29 +36,40 @@ func ReadDir(dir string) (Environment, error) {
 
 	env := make(Environment)
 	for _, dirEntry := range dirEntries {
-		filepath := dir + "/" + dirEntry.Name()
 		envVar := strings.ReplaceAll(dirEntry.Name(), "=", "")
-
-		file, err := os.Open(filepath)
+		envValue, err := envFromFile(dir, dirEntry.Name())
 		if err != nil {
-			return nil, fmt.Errorf("failed to open file %s with err %w", filepath, err)
-		}
-		defer file.Close()
-
-		env[envVar] = EnvValue{
-			NeedRemove: true,
+			return nil, fmt.Errorf("failed to get env from file %s with err %w", dirEntry.Name(), err)
 		}
 
-		scanner := bufio.NewScanner(file)
-		if scanner.Scan() {
-			content := strings.ReplaceAll(scanner.Text(), "\x00", "\n")
-			content = strings.TrimRight(content, " \t")
-			env[envVar] = EnvValue{
-				Value:      content,
-				NeedRemove: false,
-			}
-		}
+		env[envVar] = *envValue
 	}
 
 	return env, nil
+}
+
+func envFromFile(dir, name string) (*EnvValue, error) {
+	filepath := filepath.Join(dir, name)
+
+	file, err := os.Open(filepath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open file %s with err %w", filepath, err)
+	}
+	defer file.Close()
+
+	env := EnvValue{
+		NeedRemove: true,
+	}
+
+	scanner := bufio.NewScanner(file)
+	if scanner.Scan() {
+		content := strings.ReplaceAll(scanner.Text(), "\x00", "\n")
+		content = strings.TrimRight(content, " \t")
+		env = EnvValue{
+			Value:      content,
+			NeedRemove: false,
+		}
+	}
+
+	return &env, nil
 }
