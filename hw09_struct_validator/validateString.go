@@ -111,7 +111,7 @@ func keyValueRule(rule string) (string, string, error) {
 	keyRule := ruleParts[0]
 	valRule := ruleParts[1]
 	if len(ruleParts) > 2 {
-		valRule = strings.Join(ruleParts[1:], "")
+		valRule = strings.Join(ruleParts[1:], ":")
 	}
 
 	return keyRule, valRule, nil
