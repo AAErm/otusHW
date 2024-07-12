@@ -108,10 +108,10 @@ func keyValueRule(rule string) (string, string, error) {
 		return "", "", ErrInvalidRule
 	}
 
-	keyRule := strings.Split(rule, ":")[0]
-	valRule := strings.Split(rule, ":")[1]
+	keyRule := ruleParts[0]
+	valRule := ruleParts[1]
 	if len(ruleParts) > 2 {
-		valRule = strings.Join(strings.Split(rule, ":")[1:], "")
+		valRule = strings.Join(ruleParts[1:], "")
 	}
 
 	return keyRule, valRule, nil

@@ -26,7 +26,11 @@ func (v ValidationErrors) Error() string {
 		return ""
 	}
 
-	bb, _ := json.Marshal(v)
+	bb, err := json.Marshal(v)
+	if err != nil {
+		panic(err)
+	}
+
 	return string(bb)
 }
 
