@@ -1,6 +1,7 @@
 package hw06pipelineexecution
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 	"time"
@@ -89,5 +90,60 @@ func TestPipeline(t *testing.T) {
 
 		require.Len(t, result, 0)
 		require.Less(t, int64(elapsed), int64(abortDur)+int64(fault))
+	})
+
+	t.Run("ci pipeline", func(t *testing.T) {
+		stages = []Stage{
+			g("test", func(v interface{}) interface{} { return fmt.Sprint(v, ": \ntest ok\n") }),
+			g("build", func(v interface{}) interface{} { return fmt.Sprint(v, "build ok\n") }),
+			g("release", func(v interface{}) interface{} { return fmt.Sprint(v, "release ok\n") }),
+			g("production", func(v interface{}) interface{} { return fmt.Sprint(v, "production ok") }),
+		}
+		in := make(Bi)
+		data := []int{1, 2, 3, 4, 5}
+
+		go func() {
+			for _, v := range data {
+				in <- v
+			}
+			close(in)
+		}()
+
+		result := make([]string, 0, 10)
+		start := time.Now()
+		for s := range ExecutePipeline(in, nil, stages...) {
+			result = append(result, s.(string))
+		}
+		elapsed := time.Since(start)
+		require.Equal(t, []string{
+			`1: 
+test ok
+build ok
+release ok
+production ok`,
+			`2: 
+test ok
+build ok
+release ok
+production ok`,
+			`3: 
+test ok
+build ok
+release ok
+production ok`,
+			`4: 
+test ok
+build ok
+release ok
+production ok`,
+			`5: 
+test ok
+build ok
+release ok
+production ok`,
+		}, result)
+		require.Less(t,
+			int64(elapsed),
+			int64(sleepPerStage)*int64(len(stages)+len(data)-1)+int64(fault))
 	})
 }
