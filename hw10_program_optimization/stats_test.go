@@ -1,3 +1,4 @@
+//go:build !bench
 // +build !bench
 
 package hw10programoptimization
@@ -36,4 +37,46 @@ func TestGetDomainStat(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, DomainStat{}, result)
 	})
+}
+
+func Test_appendStat(t *testing.T) {
+	type args struct {
+		domain string
+		bytes  []byte
+		stat   *DomainStat
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantErr  bool
+		wantStat DomainStat
+	}{
+		{
+			name: "correct add stat",
+			args: args{
+				domain: "ru",
+				bytes:  []byte(`{"Id":1,"Name":"Howard Mendoza","Username":"0Oliver","Email":"aliquid_qui_ea@mail.ru","Phone":"6-866-899-36-79","Password":"InAQJvsq","Address":"Blackbird Place 25"}`),
+				stat: &DomainStat{
+					"mail.ru":    2,
+					"google.com": 2,
+				},
+			},
+			wantErr: false,
+			wantStat: DomainStat{
+				"mail.ru":    3,
+				"google.com": 2,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := appendStat(tt.args.domain, tt.args.bytes, tt.args.stat)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("appendStat() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			for k, v := range tt.wantStat {
+				require.Equal(t, (*tt.args.stat)[k], v)
+			}
+		})
+	}
 }
