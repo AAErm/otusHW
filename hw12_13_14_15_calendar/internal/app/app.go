@@ -4,7 +4,9 @@ import (
 	"context"
 )
 
-type App struct { // TODO
+type App struct {
+	logger  Logger
+	storage Storage
 }
 
 type Logger interface { // TODO

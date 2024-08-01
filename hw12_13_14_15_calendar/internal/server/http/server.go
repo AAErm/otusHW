@@ -4,7 +4,9 @@ import (
 	"context"
 )
 
-type Server struct { // TODO
+type Server struct {
+	logger Logger
+	app    Application
 }
 
 type Logger interface { // TODO
@@ -13,8 +15,14 @@ type Logger interface { // TODO
 type Application interface { // TODO
 }
 
-func NewServer(logger Logger, app Application) *Server {
-	return &Server{}
+func NewServer(opts ...Option) *Server {
+	s := &Server{}
+
+	for _, option := range opts {
+		option(s)
+	}
+
+	return s
 }
 
 func (s *Server) Start(ctx context.Context) error {
