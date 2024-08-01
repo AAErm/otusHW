@@ -17,4 +17,6 @@ func (l Logger) Error(msg string) {
 	// TODO
 }
 
-// TODO
+func (l Logger) Fatalf(msg string, args ...any) {
+	// TODO
+}

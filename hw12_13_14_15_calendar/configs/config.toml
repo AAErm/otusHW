@@ -1,5 +1,14 @@
 [logger]
 level = "INFO"
 
-# TODO
-# ...
+[server]
+host="localhost"
+port=8080
+
+[sql]
+host="localhost"
+port=5435
+user="root"
+password="qwerty"
+
+is_sql=true

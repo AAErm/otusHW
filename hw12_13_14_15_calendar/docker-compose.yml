@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  postgresql:
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=qwerty
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./internal/sql/schema/dump.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - calendar-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+
+volumes:
+  calendar-data:

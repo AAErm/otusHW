@@ -3,21 +3,25 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/app"
+	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/config"
 	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/logger"
 	internalhttp "github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/server/http"
+	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/storage"
 	memorystorage "github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/storage/memory"
+	sqlstorage "github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/storage/sql"
 )
 
 var configFile string
 
 func init() {
-	flag.StringVar(&configFile, "config", "/etc/calendar/config.toml", "Path to configuration file")
+	flag.StringVar(&configFile, "config", "./configs/config.json", "Path to configuration file")
 }
 
 func main() {
@@ -28,13 +32,33 @@ func main() {
 		return
 	}
 
-	config := NewConfig()
+	config := config.NewConfig(configFile)
+	if config.Error != nil {
+		fmt.Printf("failed to get config with error %v", config.Error)
+
+		return
+	}
+
 	logg := logger.New(config.Logger.Level)
 
-	storage := memorystorage.New()
+	var storage storage.Storage
+
+	if config.IsSql {
+		conn, err := db_conn(config.Sql)
+		if err != nil {
+			logg.Fatalf("Unable to connect to database: %v", err)
+		}
+		storage = sqlstorage.New(
+			sqlstorage.WithConnect(conn),
+			sqlstorage.WithLogger(logg),
+		)
+	} else {
+		storage = memorystorage.New()
+	}
+
 	calendar := app.New(
 		app.WithLogger(logg),
-		app.WithStorage(storage),
+		app.WithStorage(&storage),
 	)
 
 	server := internalhttp.NewServer(

@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/logger"
-	memorystorage "github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/storage/memory"
+	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/storage"
 )
 
 type Option func(s *App)
@@ -13,7 +13,7 @@ func WithLogger(logger *logger.Logger) Option {
 	}
 }
 
-func WithStorage(storage *memorystorage.Storage) Option {
+func WithStorage(storage *storage.Storage) Option {
 	return func(s *App) {
 		s.storage = storage
 	}

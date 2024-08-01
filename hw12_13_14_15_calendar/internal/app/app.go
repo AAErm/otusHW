@@ -2,11 +2,13 @@ package app
 
 import (
 	"context"
+
+	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/storage"
 )
 
 type App struct {
 	logger  Logger
-	storage Storage
+	storage *storage.Storage
 }
 
 type Logger interface { // TODO
