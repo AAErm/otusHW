@@ -44,7 +44,7 @@ func (s *Storage) Edit(ctx context.Context, event storage.Event) error {
 	return nil
 }
 
-func (s *Storage) Delete(ctx context.Context, event storage.Event) error {
+func (s *Storage) Delete(ctx context.Context, event storage.ID) error {
 	// TODO
 	return nil
 }

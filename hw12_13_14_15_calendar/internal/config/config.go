@@ -6,7 +6,6 @@ type Config struct {
 	Logger LoggerConf
 	Server ServerConf
 	Sql    SqlConf
-	IsSql  bool
 
 	Error error `json:"-"`
 }
@@ -21,6 +20,7 @@ type ServerConf struct {
 }
 
 type SqlConf struct {
+	Use      bool
 	Host     string
 	Port     int64
 	User     string

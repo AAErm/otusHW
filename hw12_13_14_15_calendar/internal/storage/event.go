@@ -11,11 +11,13 @@ import "time"
 // * ID пользователя, владельца события;
 // * За сколько времени высылать уведомление, опционально.
 type Event struct {
-	ID                  string
+	ID                  ID
 	Title               string
 	DateAt              time.Time
 	DateTo              time.Time
 	Description         *string
 	UserID              string
-	NotificationAdvance *string
+	NotificationAdvance *time.Time
 }
+
+type ID string

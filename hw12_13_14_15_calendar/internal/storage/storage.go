@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"time"
 )
 
@@ -14,8 +15,13 @@ import (
 type Storage interface {
 	Add(context.Context, Event) error
 	Edit(context.Context, Event) error
-	Delete(context.Context, Event) error
+	Delete(context.Context, ID) error
 	ListEventByDay(context.Context, time.Time) ([]*Event, error)
 	ListEventsForWeek(context.Context, time.Time) ([]*Event, error)
 	ListEventsForMonth(context.Context, time.Time) ([]*Event, error)
 }
+
+var (
+	ErrDateBusy = errors.New("DateBusy")
+	ErrNotFound = errors.New("NotFound")
+)

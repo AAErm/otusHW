@@ -39,11 +39,13 @@ func main() {
 		return
 	}
 
-	logg := logger.New(config.Logger.Level)
+	logg := logger.New(
+		logger.WithLevel(config.Logger.Level),
+	)
 
 	var storage storage.Storage
 
-	if config.IsSql {
+	if config.Sql.Use {
 		conn, err := db_conn(config.Sql)
 		if err != nil {
 			logg.Fatalf("Unable to connect to database: %v", err)
