@@ -2,6 +2,8 @@ package storage
 
 import "time"
 
+type ID int64
+
 // Событие - основная сущность, содержит в себе поля:
 // * ID - уникальный идентификатор события (можно воспользоваться UUID);
 // * Заголовок - короткий текст;
@@ -16,8 +18,6 @@ type Event struct {
 	DateAt              time.Time
 	DateTo              time.Time
 	Description         *string
-	UserID              string
-	NotificationAdvance *time.Time
+	UserID              ID
+	NotificationAdvance *string
 }
-
-type ID string
