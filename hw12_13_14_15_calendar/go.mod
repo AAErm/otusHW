@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/jackc/pgx/v5 v5.6.0
+	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.19.0
 )
 

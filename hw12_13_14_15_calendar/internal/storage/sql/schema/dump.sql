@@ -1,11 +1,11 @@
 CREATE TABLE USERS (
-    ID   VARCHAR(32) PRIMARY KEY,
+    ID   SERIAL PRIMARY KEY,
     NAME VARCHAR(255)
 );
 
 CREATE TABLE EVENTS (
-    ID                  VARCHAR(32) PRIMARY KEY,
-    UserID              VARCHAR(32) REFERENCES USER (ID),
+    ID                  SERIAL PRIMARY KEY,
+    UserID              INTEGER REFERENCES USER (ID),
 	Title               VARCHAR(255),
 	DateAt              TIMESTAMP
 	DateTo              TIMESTAMP

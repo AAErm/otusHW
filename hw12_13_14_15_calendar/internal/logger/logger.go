@@ -1,29 +1,52 @@
 package logger
 
-import "fmt"
+import (
+	"github.com/sirupsen/logrus"
+)
 
 type Logger struct {
-	level string
+	level  string
+	logger *logrus.Entry
 }
 
 func New(opts ...Option) *Logger {
-	logger := &Logger{}
-
-	for _, opt := range opts {
-		opt(logger)
+	l := &Logger{}
+	for _, option := range opts {
+		option(l)
 	}
 
-	return logger
+	logger := logrus.New()
+	logLevel, err := logrus.ParseLevel(l.level)
+	if err != nil {
+		logLevel = logrus.InfoLevel
+	}
+
+	logger.SetLevel(logLevel)
+	logger.SetFormatter(&logrus.JSONFormatter{
+		DisableTimestamp: true,
+	})
+
+	return &Logger{
+		logger: logrus.NewEntry(logger).WithFields(logrus.Fields{}),
+	}
+}
+
+func (l Logger) Debug(msg string) {
+	l.logger.Debug(msg)
 }
 
 func (l Logger) Info(msg string) {
-	fmt.Println(msg)
+	l.logger.Info(msg)
+}
+
+func (l Logger) Warn(msg string) {
+	l.logger.Warn(msg)
 }
 
 func (l Logger) Error(msg string) {
-	// TODO
+	l.logger.Error(msg)
 }
 
 func (l Logger) Fatalf(msg string, args ...any) {
-	// TODO
+	l.logger.Fatalf(msg, args...)
 }

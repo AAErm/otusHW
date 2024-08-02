@@ -32,23 +32,23 @@ func TestStorage_Add(t *testing.T) {
 			fields: fields{
 				logger: nil,
 				events: map[storage.ID]storage.Event{
-					storage.ID("qwe"): {
-						ID:     storage.ID("qwe"),
+					storage.ID(1): {
+						ID:     storage.ID(1),
 						Title:  "some title",
 						DateAt: time.Now().Truncate(time.Second),
 						DateTo: time.Now().Add(time.Hour),
-						UserID: "user_id",
+						UserID: storage.ID(1),
 					},
 				},
 			},
 			args: args{
 				ctx: context.TODO(),
 				event: storage.Event{
-					ID:     storage.ID("qweqwe"),
+					ID:     storage.ID(2),
 					Title:  "some title",
 					DateAt: time.Now().Truncate(time.Second),
 					DateTo: time.Now().Add(time.Hour),
-					UserID: "user_id",
+					UserID: storage.ID(1),
 				},
 			},
 			wantErr:          true,
@@ -59,23 +59,23 @@ func TestStorage_Add(t *testing.T) {
 			fields: fields{
 				logger: nil,
 				events: map[storage.ID]storage.Event{
-					storage.ID("qwe"): {
-						ID:     storage.ID("qwe"),
+					storage.ID(1): {
+						ID:     storage.ID(1),
 						Title:  "some title",
 						DateAt: time.Now().Truncate(time.Second),
 						DateTo: time.Now().Add(time.Hour),
-						UserID: "user_id",
+						UserID: storage.ID(1),
 					},
 				},
 			},
 			args: args{
 				ctx: context.TODO(),
 				event: storage.Event{
-					ID:     storage.ID("qweqwe"),
+					ID:     storage.ID(2),
 					Title:  "some title",
 					DateAt: time.Now().Add(time.Hour).Truncate(time.Second),
 					DateTo: time.Now().Add(time.Hour),
-					UserID: "user_id",
+					UserID: storage.ID(1),
 				},
 			},
 			wantErr:          false,
@@ -119,23 +119,23 @@ func TestStorage_Edit(t *testing.T) {
 			fields: fields{
 				logger: nil,
 				events: map[storage.ID]storage.Event{
-					storage.ID("qwe"): {
-						ID:     storage.ID("qwe"),
+					storage.ID(1): {
+						ID:     storage.ID(1),
 						Title:  "some title",
 						DateAt: time.Now().Truncate(time.Second),
 						DateTo: time.Now().Add(time.Hour),
-						UserID: "user_id",
+						UserID: storage.ID(1),
 					},
 				},
 			},
 			args: args{
 				ctx: context.TODO(),
 				event: storage.Event{
-					ID:     storage.ID("qweqwe"),
+					ID:     storage.ID(2),
 					Title:  "some title",
 					DateAt: time.Now().Truncate(time.Second),
 					DateTo: time.Now().Add(time.Hour),
-					UserID: "user_id",
+					UserID: storage.ID(1),
 				},
 			},
 			wantErr: true,
@@ -145,23 +145,23 @@ func TestStorage_Edit(t *testing.T) {
 			fields: fields{
 				logger: nil,
 				events: map[storage.ID]storage.Event{
-					storage.ID("qwe"): {
-						ID:     storage.ID("qwe"),
+					storage.ID(1): {
+						ID:     storage.ID(1),
 						Title:  "some title",
 						DateAt: time.Now().Truncate(time.Second),
 						DateTo: time.Now().Add(time.Hour),
-						UserID: "user_id",
+						UserID: storage.ID(1),
 					},
 				},
 			},
 			args: args{
 				ctx: context.TODO(),
 				event: storage.Event{
-					ID:     storage.ID("qwe"),
+					ID:     storage.ID(1),
 					Title:  "some title2",
 					DateAt: time.Now().Truncate(time.Second),
 					DateTo: time.Now().Add(time.Hour),
-					UserID: "user_id",
+					UserID: storage.ID(1),
 				},
 			},
 			wantErr: false,

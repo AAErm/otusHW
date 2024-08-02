@@ -2,7 +2,6 @@ package memorystorage
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
@@ -39,7 +38,7 @@ func (s *Storage) Add(ctx context.Context, event storage.Event) error {
 	default:
 	}
 
-	if s.isDateBusy(event.DateAt, storage.ID("")) {
+	if s.isDateBusy(event.DateAt, storage.ID(0)) {
 		return storage.ErrDateBusy
 	}
 
@@ -168,8 +167,6 @@ func isSameMonth(t, day time.Time) bool {
 
 func (s *Storage) isDateBusy(t time.Time, eventID storage.ID) bool {
 	for _, event := range s.events {
-		fmt.Println(event.DateAt)
-		fmt.Println(t)
 		if eventID != event.ID && event.DateAt.Equal(t) {
 			return true
 		}
