@@ -1,4 +1,4 @@
-package main
+package sqlstorage
 
 import (
 	"context"
@@ -13,18 +13,18 @@ var (
 	retryCount = 20
 )
 
-func db_conn(conf config.SqlConf) (*pgxpool.Pool, error) {
+func conn(ctx context.Context, conf config.DBConf) (*pgxpool.Pool, error) {
 	connString := fmt.Sprintf("postgres://%s:%s@%s:%d", conf.User, conf.Password, conf.Host, conf.Port)
 	poolConfig, err := pgxpool.ParseConfig(connString)
 	if err != nil {
 		return nil, err
 	}
-	db, err := pgxpool.NewWithConfig(context.Background(), poolConfig)
+	db, err := pgxpool.NewWithConfig(ctx, poolConfig)
 	if err != nil {
 		return nil, err
 	}
 	if err := dbPing(db); err != nil {
-		return nil, fmt.Errorf("Unable to connect to database: %s", err)
+		return nil, fmt.Errorf("unable to connect to database: %w", err)
 	}
 
 	return db, nil

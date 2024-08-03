@@ -12,7 +12,7 @@ services:
         max-size: "10m"
         max-file: "3"
     volumes:
-      - ./internal/sql/schema/dump.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./internal/storage/sql/schema/dump.sql:/docker-entrypoint-initdb.d/create_tables.sql
       - calendar-data:/var/lib/postgresql/data
     ports:
       - "5435:5432"

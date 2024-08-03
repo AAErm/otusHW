@@ -19,15 +19,15 @@ var fieldsEvent = []string{
 }
 
 func BuildAddEventQuery(event storage.Event) (string, []any) {
-	q_args := ""
+	qArgs := ""
 	for i := 1; i <= len(fieldsEvent); i++ {
-		q_args += fmt.Sprintf(", $%d", i)
+		qArgs += fmt.Sprintf(", $%d", i)
 	}
 
 	return fmt.Sprintf(
 			"INSERT INTO EVENTS (%s) VALUES (%s) RETURNING ID",
 			strings.Join(fieldsEvent, ", "),
-			q_args[1:]),
+			qArgs[1:]),
 		[]any{
 			event.ID,
 			event.UserID,
@@ -40,15 +40,15 @@ func BuildAddEventQuery(event storage.Event) (string, []any) {
 }
 
 func BuildEditEventQuery(event storage.Event) (string, []any) {
-	part_sql := ""
+	partSQL := ""
 	for k, v := range fieldsEvent {
 		if v == "ID" {
 			continue
 		}
-		part_sql += fmt.Sprintf(", %s = $%d", v, k)
+		partSQL += fmt.Sprintf(", %s = $%d", v, k)
 	}
 	return fmt.Sprintf("UPDATE EVENTS SET %s WHERE ID = %d",
-			part_sql,
+			partSQL,
 			len(fieldsEvent)),
 		[]any{
 			event.UserID,
@@ -61,8 +61,8 @@ func BuildEditEventQuery(event storage.Event) (string, []any) {
 		}
 }
 
-func BuildDeleteEventQuery(ID storage.ID) (string, []any) {
-	return "DELETE FROM EVENTS WHERE ID = $1", []any{ID}
+func BuildDeleteEventQuery(id storage.ID) (string, []any) {
+	return "DELETE FROM EVENTS WHERE ID = $1", []any{id}
 }
 
 func BuildListEventByDay(t time.Time) (string, []any) {

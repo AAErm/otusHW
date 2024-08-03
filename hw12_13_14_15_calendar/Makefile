@@ -10,7 +10,8 @@ build:
 run: build
 	$(BIN) -config ./configs/config.toml
 
-db: docker-compose up -d postgresql
+db:
+	docker-compose up -d postgresql
 
 build-img:
 	docker build \

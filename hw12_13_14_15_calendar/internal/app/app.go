@@ -7,13 +7,17 @@ import (
 	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/storage"
 )
 
-type App struct {
-	logger  *logger.Logger
-	storage *storage.Storage
+type App interface {
+	CreateEvent(ctx context.Context, id storage.ID, title string) error
 }
 
-func New(opts ...Option) *App {
-	app := &App{}
+type app struct {
+	logger  *logger.Logger
+	storage storage.Storage
+}
+
+func New(opts ...Option) *app {
+	app := &app{}
 
 	for _, opt := range opts {
 		opt(app)
@@ -22,10 +26,6 @@ func New(opts ...Option) *App {
 	return app
 }
 
-func (a *App) CreateEvent(ctx context.Context, id, title string) error {
-	// TODO
-	return nil
-	// return a.storage.CreateEvent(storage.Event{ID: id, Title: title})
+func (a *app) CreateEvent(ctx context.Context, id storage.ID, title string) error {
+	return a.storage.Add(ctx, storage.Event{ID: id, Title: title})
 }
-
-// TODO

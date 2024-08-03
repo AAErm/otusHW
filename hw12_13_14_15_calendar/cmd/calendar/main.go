@@ -45,27 +45,32 @@ func main() {
 
 	var storage storage.Storage
 
-	if config.Sql.Use {
-		conn, err := db_conn(config.Sql)
-		if err != nil {
-			logg.Fatalf("Unable to connect to database: %v", err)
-		}
+	if config.DB.Use {
 		storage = sqlstorage.New(
-			sqlstorage.WithConnect(conn),
+			sqlstorage.WithConfig(config.DB),
 			sqlstorage.WithLogger(logg),
 		)
 	} else {
 		storage = memorystorage.New()
 	}
 
+	err := storage.Connect(context.Background())
+	if err != nil {
+		logg.Fatalf("failed to conntect to storage %v", err)
+	}
+	defer storage.Close(context.Background())
+
 	calendar := app.New(
 		app.WithLogger(logg),
-		app.WithStorage(&storage),
+		app.WithStorage(storage),
 	)
 
 	server := internalhttp.NewServer(
 		internalhttp.WithLogger(logg),
 		internalhttp.WithApplication(calendar),
+		internalhttp.WithStorage(storage),
+		internalhttp.WithHost(config.Server.Host),
+		internalhttp.WithPort(config.Server.Port),
 	)
 
 	ctx, cancel := signal.NotifyContext(context.Background(),

@@ -5,7 +5,7 @@ import "github.com/spf13/viper"
 type Config struct {
 	Logger LoggerConf
 	Server ServerConf
-	Sql    SqlConf
+	DB     DBConf
 
 	Error error `json:"-"`
 }
@@ -19,7 +19,7 @@ type ServerConf struct {
 	Port int64
 }
 
-type SqlConf struct {
+type DBConf struct {
 	Use      bool
 	Host     string
 	Port     int64

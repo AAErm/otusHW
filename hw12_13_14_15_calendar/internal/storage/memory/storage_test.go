@@ -2,7 +2,6 @@ package memorystorage
 
 import (
 	"context"
-	"sync"
 	"testing"
 	"time"
 
@@ -14,7 +13,6 @@ func TestStorage_Add(t *testing.T) {
 	type fields struct {
 		logger *logger.Logger
 		events map[storage.ID]storage.Event
-		mu     sync.RWMutex
 	}
 	type args struct {
 		ctx   context.Context
@@ -87,7 +85,6 @@ func TestStorage_Add(t *testing.T) {
 			s := &Storage{
 				logger: tt.fields.logger,
 				events: tt.fields.events,
-				mu:     tt.fields.mu,
 			}
 			if err := s.Add(tt.args.ctx, tt.args.event); (err != nil) != tt.wantErr {
 				t.Errorf("Storage.Add() error = %v, wantErr %v", err, tt.wantErr)
@@ -102,7 +99,6 @@ func TestStorage_Edit(t *testing.T) {
 	type fields struct {
 		logger *logger.Logger
 		events map[storage.ID]storage.Event
-		mu     sync.RWMutex
 	}
 	type args struct {
 		ctx   context.Context
@@ -172,7 +168,6 @@ func TestStorage_Edit(t *testing.T) {
 			s := &Storage{
 				logger: tt.fields.logger,
 				events: tt.fields.events,
-				mu:     tt.fields.mu,
 			}
 			if err := s.Edit(tt.args.ctx, tt.args.event); (err != nil) != tt.wantErr {
 				t.Errorf("Storage.Edit() error = %v, wantErr %v", err, tt.wantErr)

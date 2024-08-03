@@ -1,8 +1,9 @@
 module github.com/AAErm/otusHW/hw12_13_14_15_calendar
 
-go 1.19
+go 1.21
 
 require (
+	github.com/gorilla/mux v1.8.1
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.19.0

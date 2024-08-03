@@ -13,7 +13,7 @@ type Storage struct {
 	logger *logger.Logger
 	events map[storage.ID]storage.Event
 
-	mu sync.RWMutex //nolint:unused
+	mu sync.RWMutex
 }
 
 func New(opts ...Option) *Storage {
@@ -91,7 +91,7 @@ func (s *Storage) Delete(ctx context.Context, eventID storage.ID) error {
 	return nil
 }
 
-func (s *Storage) ListEventByDay(ctx context.Context, t time.Time) ([]*storage.Event, error) {
+func (s *Storage) ListEventByDay(ctx context.Context, t time.Time) ([]storage.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -101,17 +101,17 @@ func (s *Storage) ListEventByDay(ctx context.Context, t time.Time) ([]*storage.E
 	default:
 	}
 
-	res := make([]*storage.Event, 0, len(s.events))
+	res := make([]storage.Event, 0, len(s.events))
 	for _, event := range s.events {
 		if isSameDay(event.DateTo, t) {
-			res = append(res, &event)
+			res = append(res, event)
 		}
 	}
 
 	return res, nil
 }
 
-func (s *Storage) ListEventsForWeek(ctx context.Context, t time.Time) ([]*storage.Event, error) {
+func (s *Storage) ListEventsForWeek(ctx context.Context, t time.Time) ([]storage.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -121,17 +121,17 @@ func (s *Storage) ListEventsForWeek(ctx context.Context, t time.Time) ([]*storag
 	default:
 	}
 
-	res := make([]*storage.Event, 0, len(s.events))
+	res := make([]storage.Event, 0, len(s.events))
 	for _, event := range s.events {
 		if isSameWeek(event.DateTo, t) {
-			res = append(res, &event)
+			res = append(res, event)
 		}
 	}
 
 	return res, nil
 }
 
-func (s *Storage) ListEventsForMonth(ctx context.Context, t time.Time) ([]*storage.Event, error) {
+func (s *Storage) ListEventsForMonth(ctx context.Context, t time.Time) ([]storage.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -141,10 +141,10 @@ func (s *Storage) ListEventsForMonth(ctx context.Context, t time.Time) ([]*stora
 	default:
 	}
 
-	res := make([]*storage.Event, 0, len(s.events))
+	res := make([]storage.Event, 0, len(s.events))
 	for _, event := range s.events {
 		if isSameMonth(event.DateTo, t) {
-			res = append(res, &event)
+			res = append(res, event)
 		}
 	}
 
@@ -173,4 +173,12 @@ func (s *Storage) isDateBusy(t time.Time, eventID storage.ID) bool {
 	}
 
 	return false
+}
+
+func (s *Storage) Connect(context.Context) error {
+	return nil
+}
+
+func (s *Storage) Close(context.Context) error {
+	return nil
 }
