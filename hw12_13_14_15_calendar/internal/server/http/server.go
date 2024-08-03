@@ -51,7 +51,10 @@ func (s *server) Start(ctx context.Context) error {
 
 	go func() {
 		<-ctx.Done()
-		s.Stop(ctx)
+		err := s.Stop(ctx)
+		if err != nil {
+			fmt.Printf("failed to server shutdown %v", err)
+		}
 	}()
 
 	s.logger.Info(fmt.Sprintf("Server started at %s:%d", s.host, s.port))
