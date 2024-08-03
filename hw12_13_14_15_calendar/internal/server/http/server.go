@@ -41,7 +41,7 @@ func (s *server) Start(ctx context.Context) error {
 	router := mux.NewRouter()
 	router.HandleFunc("/", s.hello)
 
-	handlerWithMiddleware := loggingMiddleware(router, s.logger)
+	handlerWithMiddleware := s.loggingMiddleware(router)
 
 	s.server = &http.Server{
 		Addr:              fmt.Sprintf("%s:%d", s.host, s.port),

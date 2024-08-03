@@ -28,23 +28,24 @@ func New(opts ...Option) *Storage {
 	return s
 }
 
-func (s *Storage) Add(ctx context.Context, event storage.Event) error {
+func (s *Storage) Add(ctx context.Context, event storage.Event) (storage.ID, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	select {
 	case <-ctx.Done():
-		return ctx.Err()
+		return 0, ctx.Err()
 	default:
 	}
 
+	event.ID = storage.ID(len(s.events) + 1)
 	if s.isDateBusy(event.DateAt, storage.ID(0)) {
-		return storage.ErrDateBusy
+		return 0, storage.ErrDateBusy
 	}
 
 	s.events[event.ID] = event
 
-	return nil
+	return event.ID, nil
 }
 
 func (s *Storage) Edit(ctx context.Context, event storage.Event) error {
@@ -111,7 +112,7 @@ func (s *Storage) ListEventByDay(ctx context.Context, t time.Time) ([]storage.Ev
 	return res, nil
 }
 
-func (s *Storage) ListEventsForWeek(ctx context.Context, t time.Time) ([]storage.Event, error) {
+func (s *Storage) ListEventsByWeek(ctx context.Context, t time.Time) ([]storage.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -131,7 +132,7 @@ func (s *Storage) ListEventsForWeek(ctx context.Context, t time.Time) ([]storage
 	return res, nil
 }
 
-func (s *Storage) ListEventsForMonth(ctx context.Context, t time.Time) ([]storage.Event, error) {
+func (s *Storage) ListEventsByMonth(ctx context.Context, t time.Time) ([]storage.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

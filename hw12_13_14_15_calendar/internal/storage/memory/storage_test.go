@@ -86,7 +86,7 @@ func TestStorage_Add(t *testing.T) {
 				logger: tt.fields.logger,
 				events: tt.fields.events,
 			}
-			if err := s.Add(tt.args.ctx, tt.args.event); (err != nil) != tt.wantErr {
+			if _, err := s.Add(tt.args.ctx, tt.args.event); (err != nil) != tt.wantErr {
 				t.Errorf("Storage.Add() error = %v, wantErr %v", err, tt.wantErr)
 			} else if len(tt.fields.events) != tt.wantAmountEvents {
 				t.Errorf("Storage.Add() want %d events, have %d", tt.wantAmountEvents, len(tt.fields.events))

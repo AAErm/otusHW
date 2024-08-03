@@ -3,11 +3,9 @@ package internalhttp
 import (
 	"net/http"
 	"time"
-
-	"github.com/AAErm/otusHW/hw12_13_14_15_calendar/internal/logger"
 )
 
-type middleware struct {
+type middlewareLog struct {
 	ClientIP    string
 	ReqTime     time.Time
 	MethodHTTP  string
@@ -18,12 +16,12 @@ type middleware struct {
 	UserAgent   string
 }
 
-func loggingMiddleware(next http.Handler, logg *logger.Logger) http.Handler {
+func (s *server) loggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		rw := NewResponseWriter(w)
 		next.ServeHTTP(rw, r)
-		mv := middleware{
+		mv := middlewareLog{
 			ClientIP:    r.RemoteAddr,
 			ReqTime:     start,
 			MethodHTTP:  r.Method,
@@ -33,7 +31,7 @@ func loggingMiddleware(next http.Handler, logg *logger.Logger) http.Handler {
 			Latency:     time.Since(start),
 			RespCode:    rw.StatusCode,
 		}
-		logg.Info("%+v", mv)
+		s.logger.Info("%+v", mv)
 	})
 }
 

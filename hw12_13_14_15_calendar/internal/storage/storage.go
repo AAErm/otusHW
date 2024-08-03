@@ -15,12 +15,12 @@ import (
 type Storage interface {
 	Connect(context.Context) error
 	Close(context.Context) error
-	Add(context.Context, Event) error
+	Add(context.Context, Event) (ID, error)
 	Edit(context.Context, Event) error
 	Delete(context.Context, ID) error
 	ListEventByDay(context.Context, time.Time) ([]Event, error)
-	ListEventsForWeek(context.Context, time.Time) ([]Event, error)
-	ListEventsForMonth(context.Context, time.Time) ([]Event, error)
+	ListEventsByWeek(context.Context, time.Time) ([]Event, error)
+	ListEventsByMonth(context.Context, time.Time) ([]Event, error)
 }
 
 var (

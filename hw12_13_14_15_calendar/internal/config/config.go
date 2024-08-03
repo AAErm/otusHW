@@ -1,11 +1,16 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	Logger LoggerConf
 	Server ServerConf
 	DB     DBConf
+	Grpc   GrpcConf
 
 	Error error `json:"-"`
 }
@@ -17,6 +22,10 @@ type LoggerConf struct {
 type ServerConf struct {
 	Host string
 	Port int64
+}
+
+type GrpcConf struct {
+	Host string
 }
 
 type DBConf struct {
@@ -34,6 +43,7 @@ func NewConfig(filepath string) Config {
 
 	err := viper.ReadInConfig()
 	if err != nil {
+		fmt.Println("!!!!!!!!!!!!!!!!!!!", err)
 		config.Error = err
 		return config
 	}
