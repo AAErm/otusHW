@@ -15,7 +15,7 @@ var fieldsEvent = []string{
 	"DateAt",
 	"DateTo",
 	"Description",
-	"NotificationAdvance",
+	"NotificationTime",
 }
 
 func BuildAddEventQuery(event storage.Event) (string, []any) {
@@ -35,7 +35,7 @@ func BuildAddEventQuery(event storage.Event) (string, []any) {
 			event.DateAt.Truncate(time.Second),
 			event.DateTo.Truncate(time.Second),
 			event.Description,
-			event.NotificationAdvance,
+			event.NotificationTime,
 		}
 }
 
@@ -56,7 +56,7 @@ func BuildEditEventQuery(event storage.Event) (string, []any) {
 			event.DateAt.Truncate(time.Second),
 			event.DateTo.Truncate(time.Second),
 			event.Description,
-			event.NotificationAdvance,
+			event.NotificationTime,
 			event.ID,
 		}
 }
@@ -96,4 +96,24 @@ func BuildListEventByMonth(t time.Time) (string, []any) {
 			start,
 			end,
 		}
+}
+
+func BuildGetEventsForNotification(start time.Time, end time.Time) (string, []any) {
+	startNotif := time.Date(start.Year(), start.Month(), 1, 0, 0, 0, 0, start.Location())
+	endNotif := time.Date(end.Year(), end.Month(), 1, 0, 0, 0, 0, end.Location())
+	return `SELECT * FROM EVENTS  
+	WHERE   
+    (NotificationTime IS NOT NULL AND NotificationTime > $1 AND NotificationTime < $2)  
+    OR   
+    (NotificationTime IS NULL AND DateAt > $3 AND DateAt < $4)`,
+		[]any{
+			startNotif,
+			endNotif,
+			startNotif,
+			endNotif,
+		}
+}
+
+func BuildDeleteExpiredEvents() (string, []any) {
+	return `DELETE FROM EVENTS WHERE DateTo < $1`, []any{time.Now().AddDate(1, 0, 0)}
 }

@@ -152,6 +152,50 @@ func (s *Storage) ListEventsByMonth(ctx context.Context, t time.Time) ([]storage
 	return res, nil
 }
 
+func (s *Storage) GetEventsForNotification(ctx context.Context, start time.Time, end time.Time) ([]storage.Event, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+	}
+
+	res := make([]storage.Event, 0, len(s.events))
+	for _, event := range s.events {
+		timeNotification := event.DateAt
+		if event.NotificationTime != nil {
+			timeNotification = *event.NotificationTime
+		}
+
+		if timeNotification.After(start) && timeNotification.Before(end) {
+			res = append(res, event)
+		}
+	}
+
+	return res, nil
+}
+
+func (s *Storage) DeleteExpiredEvents(ctx context.Context) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
+
+	for k, event := range s.events {
+		if event.DateTo.Before(time.Now().AddDate(1, 0, 0)) {
+			delete(s.events, k)
+		}
+	}
+
+	return nil
+}
+
 func isSameDay(t, day time.Time) bool {
 	return t.Year() == day.Year() && t.YearDay() == day.YearDay()
 }

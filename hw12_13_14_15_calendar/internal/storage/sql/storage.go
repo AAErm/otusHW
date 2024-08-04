@@ -90,6 +90,20 @@ func (s *Storage) ListEventsByMonth(ctx context.Context, t time.Time) ([]storage
 	return s.getList(ctx, query, args)
 }
 
+func (s *Storage) GetEventsForNotification(ctx context.Context, start time.Time, end time.Time) ([]storage.Event, error) {
+	query, args := query.BuildGetEventsForNotification(start, end)
+	return s.getList(ctx, query, args)
+}
+
+func (s *Storage) DeleteExpiredEvents(ctx context.Context) error {
+	query, args := query.BuildDeleteExpiredEvents()
+	_, err := s.conn.Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to delete events %w", err)
+	}
+	return nil
+}
+
 func (s *Storage) getList(ctx context.Context, query string, args []any) ([]storage.Event, error) {
 	rows, err := s.conn.Query(ctx, query, args...)
 	if err != nil {
@@ -101,7 +115,7 @@ func (s *Storage) getList(ctx context.Context, query string, args []any) ([]stor
 		var r storage.Event
 		if err := rows.Scan(
 			&r.ID, &r.UserID, &r.Title, &r.DateAt,
-			&r.DateTo, &r.Description, &r.NotificationAdvance,
+			&r.DateTo, &r.Description, &r.NotificationTime,
 		); err != nil && !errors.Is(err, sql.ErrNoRows) {
 			return nil, fmt.Errorf("failed to get list event with error %w", err)
 		}

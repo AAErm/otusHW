@@ -10,5 +10,5 @@ CREATE TABLE EVENTS (
 	DateAt              TIMESTAMP
 	DateTo              TIMESTAMP
 	Description         VARCHAR(255),
-	NotificationAdvance TIMESTAMP
+	NotificationTime TIMESTAMP
 );

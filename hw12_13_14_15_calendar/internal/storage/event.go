@@ -13,11 +13,11 @@ type ID int64
 // * ID пользователя, владельца события;
 // * За сколько времени высылать уведомление, опционально.
 type Event struct {
-	ID                  ID
-	Title               string
-	DateAt              time.Time
-	DateTo              time.Time
-	Description         *string
-	UserID              ID
-	NotificationAdvance *time.Time
+	ID               ID
+	Title            string
+	DateAt           time.Time
+	DateTo           time.Time
+	Description      *string
+	UserID           ID
+	NotificationTime *time.Time
 }

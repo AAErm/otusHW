@@ -35,7 +35,15 @@ func (l Logger) Debug(msg string) {
 	l.logger.Debug(msg)
 }
 
+func (l Logger) Debugf(msg string, args ...any) {
+	l.logger.Debugf(msg, args...)
+}
+
 func (l Logger) Info(msg string, args ...any) {
+	l.logger.Infof(msg, args...)
+}
+
+func (l Logger) Infof(msg string, args ...any) {
 	l.logger.Infof(msg, args...)
 }
 
@@ -45,6 +53,10 @@ func (l Logger) Warn(msg string) {
 
 func (l Logger) Error(msg string) {
 	l.logger.Error(msg)
+}
+
+func (l Logger) Errorf(msg string, args ...any) {
+	l.logger.Errorf(msg, args...)
 }
 
 func (l Logger) Fatalf(msg string, args ...any) {

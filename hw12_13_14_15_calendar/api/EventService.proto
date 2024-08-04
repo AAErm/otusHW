@@ -22,7 +22,7 @@ message EventResponse {
   int64 date_to = 4;
   string description = 5;
   int64 user_id = 6;
-  int64 notification_advance = 7;
+  int64 notification_time = 7;
 }
 
 message ListEventsRequest {
@@ -39,7 +39,7 @@ message CreateEventRequest {
   int64 date_to = 3;
   string description = 4;
   int64 user_id = 5;
-  int64 notification_advance = 6;
+  int64 notification_time = 6;
 }
 
 message UpdateEventRequest {
@@ -49,7 +49,7 @@ message UpdateEventRequest {
   int64 date_to = 4;
   string description = 5;
   int64 user_id = 6;
-  int64 notification_advance = 7;
+  int64 notification_time = 7;
 }
 
 message DeleteEventRequest {

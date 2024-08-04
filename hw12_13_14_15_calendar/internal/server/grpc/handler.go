@@ -48,13 +48,13 @@ func prepareListEventsResponse(events []storage.Event) []*proto.EventResponse {
 	pbevs := make([]*proto.EventResponse, 0, len(events))
 	for _, e := range events {
 		pbevs = append(pbevs, &proto.EventResponse{
-			Id:                  int64(e.ID),
-			Title:               e.Title,
-			Description:         *e.Description,
-			UserId:              int64(e.UserID),
-			DateAt:              e.DateAt.Unix(),
-			DateTo:              e.DateTo.Unix(),
-			NotificationAdvance: e.NotificationAdvance.Unix(),
+			Id:               int64(e.ID),
+			Title:            e.Title,
+			Description:      *e.Description,
+			UserId:           int64(e.UserID),
+			DateAt:           e.DateAt.Unix(),
+			DateTo:           e.DateTo.Unix(),
+			NotificationTime: e.NotificationTime.Unix(),
 		})
 	}
 
@@ -63,14 +63,14 @@ func prepareListEventsResponse(events []storage.Event) []*proto.EventResponse {
 
 func (s *server) CreateEvent(ctx context.Context, req *proto.CreateEventRequest) (*proto.EditEventResponse, error) {
 	desc := req.GetDescription()
-	notificationAdvance := time.Unix(req.GetNotificationAdvance(), 0)
+	NotificationTime := time.Unix(req.GetNotificationTime(), 0)
 	e := storage.Event{
-		Title:               req.GetTitle(),
-		Description:         &desc,
-		UserID:              storage.ID(req.GetUserId()),
-		DateAt:              time.Unix(req.GetDateAt(), 0),
-		DateTo:              time.Unix(req.GetDateTo(), 0),
-		NotificationAdvance: &notificationAdvance,
+		Title:            req.GetTitle(),
+		Description:      &desc,
+		UserID:           storage.ID(req.GetUserId()),
+		DateAt:           time.Unix(req.GetDateAt(), 0),
+		DateTo:           time.Unix(req.GetDateTo(), 0),
+		NotificationTime: &NotificationTime,
 	}
 
 	id, err := s.app.CreateEvent(ctx, e)
@@ -85,15 +85,15 @@ func (s *server) CreateEvent(ctx context.Context, req *proto.CreateEventRequest)
 
 func (s *server) UpdateEvent(ctx context.Context, req *proto.UpdateEventRequest) (*proto.EditEventResponse, error) {
 	desc := req.GetDescription()
-	notificationAdvance := time.Unix(req.GetNotificationAdvance(), 0)
+	NotificationTime := time.Unix(req.GetNotificationTime(), 0)
 	e := storage.Event{
-		ID:                  storage.ID(req.GetId()),
-		Title:               req.GetTitle(),
-		Description:         &desc,
-		UserID:              storage.ID(req.GetUserId()),
-		DateAt:              time.Unix(req.GetDateAt(), 0),
-		DateTo:              time.Unix(req.GetDateTo(), 0),
-		NotificationAdvance: &notificationAdvance,
+		ID:               storage.ID(req.GetId()),
+		Title:            req.GetTitle(),
+		Description:      &desc,
+		UserID:           storage.ID(req.GetUserId()),
+		DateAt:           time.Unix(req.GetDateAt(), 0),
+		DateTo:           time.Unix(req.GetDateTo(), 0),
+		NotificationTime: &NotificationTime,
 	}
 
 	err := s.app.UpdateEvent(ctx, e)

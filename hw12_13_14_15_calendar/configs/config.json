@@ -15,5 +15,30 @@
     },
     "grpc": {
         "host": ":50051"
+    },
+    "amqp": {
+        "dsn": "amqp://guest:guest@amqp:5672/",
+        "service_name": "calendar",
+        "mt_config": {
+            "services": {
+                "calendar": {
+                    "exchange": {
+                        "name": "amq.direct",
+                        "type": "direct",
+                        "durable": true,
+                        "queue": {
+                            "name": "calendar",
+                            "durable": true
+                        },
+                        "binding": {
+                            "key": "calendar"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "sheduler": {
+        "interval": 10
     }
 }

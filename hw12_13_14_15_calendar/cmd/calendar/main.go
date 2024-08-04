@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"sync"
 	"syscall"
 	"time"
@@ -44,6 +45,16 @@ func main() {
 	logg := logger.New(
 		logger.WithLevel(config.Logger.Level),
 	)
+
+	defer func() {
+		if p := recover(); p != nil {
+			logg.Errorf(
+				"panic recovered: %s; stack trace: %s",
+				p,
+				string(debug.Stack()),
+			)
+		}
+	}()
 
 	var storage storage.Storage
 
