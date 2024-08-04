@@ -8,12 +8,12 @@ import (
 )
 
 type Config struct {
-	Logger   LoggerConf
-	Server   ServerConf
-	DB       DBConf
-	Grpc     GrpcConf
-	AMQP     AMQPConf
-	Sheduler ShedulerConf
+	Logger    LoggerConf
+	Server    ServerConf
+	DB        DBConf
+	Grpc      GrpcConf
+	AMQP      AMQPConf
+	Scheduler SchedulerConf
 
 	Error error `json:"-"`
 }
@@ -37,15 +37,16 @@ type DBConf struct {
 	Port     int64
 	User     string
 	Password string
+	DbName   string `json:"db_name"`
 }
 
 type AMQPConf struct {
-	DSN         string `json:"dsn"`
-	ServiceName string
+	DSN         string    `json:"dsn"`
+	ServiceName string    `json:"service_name"`
 	MtConfig    mt.Config `json:"mt_config"`
 }
 
-type ShedulerConf struct {
+type SchedulerConf struct {
 	Interval int
 }
 

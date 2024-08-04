@@ -24,15 +24,16 @@ func TestNewConfig(t *testing.T) {
 					Level: "INFO",
 				},
 				Server: ServerConf{
-					Host: "localhost",
+					Host: "",
 					Port: 8080,
 				},
 				DB: DBConf{
-					Use:      false,
-					Host:     "localhost",
-					Port:     5435,
+					Use:      true,
+					Host:     "postgresql",
+					Port:     5432,
 					User:     "root",
 					Password: "qwerty",
+					DbName:   "calendar",
 				},
 				Grpc: GrpcConf{
 					Host: ":50051",
@@ -59,7 +60,7 @@ func TestNewConfig(t *testing.T) {
 						},
 					},
 				},
-				Sheduler: ShedulerConf{
+				Scheduler: SchedulerConf{
 					Interval: 10,
 				},
 			},
@@ -94,8 +95,8 @@ func TestNewConfig(t *testing.T) {
 				t.Errorf("NewConfig Logger = %v, want %v", got.Logger, tt.want.Logger)
 			}
 
-			if !reflect.DeepEqual(got.Sheduler, tt.want.Sheduler) {
-				t.Errorf("NewConfig Sheduler = %v, want %v", got.Sheduler, tt.want.Sheduler)
+			if !reflect.DeepEqual(got.Scheduler, tt.want.Scheduler) {
+				t.Errorf("NewConfig Scheduler = %v, want %v", got.Scheduler, tt.want.Scheduler)
 			}
 		})
 	}

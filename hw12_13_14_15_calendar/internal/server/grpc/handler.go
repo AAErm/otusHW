@@ -52,9 +52,9 @@ func prepareListEventsResponse(events []storage.Event) []*proto.EventResponse {
 			Title:            e.Title,
 			Description:      *e.Description,
 			UserId:           int64(e.UserID),
-			DateAt:           e.DateAt.Unix(),
-			DateTo:           e.DateTo.Unix(),
-			NotificationTime: e.NotificationTime.Unix(),
+			DateAt:           time.Time(e.DateAt).Unix(),
+			DateTo:           time.Time(e.DateTo).Unix(),
+			NotificationTime: time.Time(*e.NotificationTime).Unix(),
 		})
 	}
 
