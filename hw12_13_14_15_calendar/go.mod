@@ -1,8 +1,6 @@
 module github.com/AAErm/otusHW/hw12_13_14_15_calendar
 
-go 1.21
-
-toolchain go1.22.0
+go 1.22
 
 require (
 	github.com/go-co-op/gocron v1.37.0

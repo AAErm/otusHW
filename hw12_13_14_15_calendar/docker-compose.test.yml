@@ -1,0 +1,103 @@
+version: '3'
+
+services:
+  calendar:
+    container_name: calendar
+    build:
+      context: .
+      dockerfile: ./build/calendar/Dockerfile
+    restart: always
+    volumes:
+      - ./configs:/configs
+    command: sh -c "sleep 5 && ./opt/calendar/calendar-app --config configs/config.json"
+    ports:
+      - "4444:8080"
+      - "8888:50051"
+    depends_on:
+      - postgresql
+    networks:
+      - calendar_network
+
+  calendar_scheduler:
+    container_name: calendar_scheduler
+    build:
+      context: .
+      dockerfile: ./build/scheduler/Dockerfile
+    restart: always
+    volumes:
+      - ./configs:/configs
+    command: sh -c "./opt/app/bin --config configs/config.json"
+    depends_on:
+      - postgresql
+      - amqp
+    networks:
+      - calendar_network
+
+  calendar_sender:
+    container_name: calendar_sender
+    build:
+      context: .
+      dockerfile: ./build/sender/Dockerfile
+    restart: always
+    volumes:
+      - ./configs:/configs
+    command: sh -c "./opt/app/bin --config configs/config.json"
+    depends_on:
+      - amqp
+    networks:
+      - calendar_network
+
+  postgresql:
+    container_name: db
+    image: postgres:14.1-alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=qwerty
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./internal/storage/sql/schema/dump.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - calendar-data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - calendar_network
+
+  amqp:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
+    volumes:
+      - ./testdata/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./testdata/rabbitmq.json:/etc/rabbitmq/definitions.json
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - calendar_network
+
+  integration_tests:
+    build:
+      context: .
+      dockerfile: ./test/Dockerfile
+    command: "true"
+    links:
+      - calendar
+    networks:
+      - default
+      - calendar_network
+    depends_on:
+      - postgresql
+      - amqp
+      - calendar
+      - calendar_scheduler
+      - calendar_sender
+
+networks:
+  calendar_network:
+    driver: bridge
+
+volumes:
+  calendar-data:

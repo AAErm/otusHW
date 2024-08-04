@@ -227,3 +227,7 @@ func (s *Storage) Connect(context.Context) error {
 func (s *Storage) Close(context.Context) error {
 	return nil
 }
+
+func (s *Storage) AddNotification(context.Context, storage.ID) error {
+	return nil
+}

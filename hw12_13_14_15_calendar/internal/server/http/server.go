@@ -40,6 +40,12 @@ func NewServer(opts ...Option) *server {
 func (s *server) Start(ctx context.Context) error {
 	router := mux.NewRouter()
 	router.HandleFunc("/", s.hello)
+	router.HandleFunc("/add", s.add)
+	router.HandleFunc("/edit", s.edit)
+	router.HandleFunc("/delete/{id}", s.delete)
+	router.HandleFunc("/listByDay", s.listByDay)
+	router.HandleFunc("/listByWeak", s.listByWeak)
+	router.HandleFunc("/listByMonth", s.listByMonth)
 
 	handlerWithMiddleware := s.loggingMiddleware(router)
 
@@ -67,9 +73,4 @@ func (s *server) Stop(ctx context.Context) error {
 		return s.server.Shutdown(ctx)
 	}
 	return nil
-}
-
-func (s *server) hello(w http.ResponseWriter, r *http.Request) {
-	_ = r
-	fmt.Fprintln(w, "Hello, World!")
 }
