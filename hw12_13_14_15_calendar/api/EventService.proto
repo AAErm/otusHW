@@ -1,7 +1,61 @@
 syntax = "proto3";
 
-package event;
+option go_package = "api/proto;proto";
 
-message Event {
-    // TODO
+service EventService {
+  rpc ListEventsByDay (ListEventsRequest) returns (ListEventsResponse);
+  rpc ListEventsByWeek (ListEventsRequest) returns (ListEventsResponse);
+  rpc ListEventsByMonth (ListEventsRequest) returns (ListEventsResponse);
+  rpc CreateEvent (CreateEventRequest) returns (EditEventResponse);
+  rpc UpdateEvent (UpdateEventRequest) returns (EditEventResponse);
+  rpc DeleteEvent (DeleteEventRequest) returns (DeleteEventResponse);
+}
+
+message EditEventResponse {
+  int64 id = 1;
+}
+
+message EventResponse {
+  int64 id = 1;
+  string title = 2;
+  int64 date_at = 3;
+  int64 date_to = 4;
+  string description = 5;
+  int64 user_id = 6;
+  int64 notification_advance = 7;
+}
+
+message ListEventsRequest {
+  int64 time = 1;
+}
+
+message ListEventsResponse {
+  repeated EventResponse events = 1;
+}
+
+message CreateEventRequest {
+  string title = 1;
+  int64 date_at = 2;
+  int64 date_to = 3;
+  string description = 4;
+  int64 user_id = 5;
+  int64 notification_advance = 6;
+}
+
+message UpdateEventRequest {
+  int64 id = 1;
+  string title = 2;
+  int64 date_at = 3;
+  int64 date_to = 4;
+  string description = 5;
+  int64 user_id = 6;
+  int64 notification_advance = 7;
+}
+
+message DeleteEventRequest {
+  int64 id = 1;
+}
+
+message DeleteEventResponse {
+  string result = 1;
 }

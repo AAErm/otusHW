@@ -19,5 +19,5 @@ type Event struct {
 	DateTo              time.Time
 	Description         *string
 	UserID              ID
-	NotificationAdvance *string
+	NotificationAdvance *time.Time
 }

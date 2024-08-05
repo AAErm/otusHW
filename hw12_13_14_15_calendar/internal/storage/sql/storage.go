@@ -46,13 +46,15 @@ func (s *Storage) Close(context.Context) error {
 	return nil
 }
 
-func (s *Storage) Add(ctx context.Context, event storage.Event) error {
+func (s *Storage) Add(ctx context.Context, event storage.Event) (storage.ID, error) {
 	query, args := query.BuildAddEventQuery(event)
-	_, err := s.conn.Exec(ctx, query, args...)
+	var id storage.ID
+	err := s.conn.QueryRow(ctx, query, args...).Scan(&id)
 	if err != nil {
-		return fmt.Errorf("failed to add event %w", err)
+		return 0, fmt.Errorf("failed to add event %w", err)
 	}
-	return nil
+
+	return id, nil
 }
 
 func (s *Storage) Edit(ctx context.Context, event storage.Event) error {
@@ -78,12 +80,12 @@ func (s *Storage) ListEventByDay(ctx context.Context, t time.Time) ([]storage.Ev
 	return s.getList(ctx, query, args)
 }
 
-func (s *Storage) ListEventsForWeek(ctx context.Context, t time.Time) ([]storage.Event, error) {
+func (s *Storage) ListEventsByWeek(ctx context.Context, t time.Time) ([]storage.Event, error) {
 	query, args := query.BuildListEventByWeak(t)
 	return s.getList(ctx, query, args)
 }
 
-func (s *Storage) ListEventsForMonth(ctx context.Context, t time.Time) ([]storage.Event, error) {
+func (s *Storage) ListEventsByMonth(ctx context.Context, t time.Time) ([]storage.Event, error) {
 	query, args := query.BuildListEventByWeak(t)
 	return s.getList(ctx, query, args)
 }
