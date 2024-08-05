@@ -13,11 +13,11 @@ type ID int64
 // * ID пользователя, владельца события;
 // * За сколько времени высылать уведомление, опционально.
 type Event struct {
-	ID               ID
-	Title            string
-	DateAt           time.Time
-	DateTo           time.Time
-	Description      *string
-	UserID           ID
-	NotificationTime *time.Time
+	ID               ID         `json:"id,omitempty"`
+	Title            string     `json:"title"`
+	DateAt           time.Time  `json:"date_at"`
+	DateTo           time.Time  `json:"date_to"`
+	Description      *string    `json:"description,omitempty"`
+	UserID           ID         `json:"user_id"`
+	NotificationTime *time.Time `json:"notification_time"`
 }

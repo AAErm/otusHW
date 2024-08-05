@@ -125,3 +125,13 @@ func (s *Storage) getList(ctx context.Context, query string, args []any) ([]stor
 
 	return rr, nil
 }
+
+func (s *Storage) AddNotification(ctx context.Context, eventID storage.ID) error {
+	query, args := query.BuildAddNotificationQuery(eventID)
+	err := s.conn.QueryRow(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to add notification %v", err)
+	}
+
+	return nil
+}

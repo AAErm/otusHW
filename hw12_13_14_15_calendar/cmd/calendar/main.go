@@ -64,7 +64,9 @@ func main() {
 			sqlstorage.WithLogger(logg),
 		)
 	} else {
-		storage = memorystorage.New()
+		storage = memorystorage.New(
+			memorystorage.WithLogger(logg),
+		)
 	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
