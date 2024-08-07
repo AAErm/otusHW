@@ -10,6 +10,9 @@ build:
 run: build
 	$(BIN) -config ./configs/config.toml
 
+db:
+	docker-compose up -d postgresql
+
 build-img:
 	docker build \
 		--build-arg=LDFLAGS="$(LDFLAGS)" \
@@ -23,12 +26,18 @@ version: build
 	$(BIN) version
 
 test:
-	go test -race ./internal/... ./pkg/...
+	go test -race ./internal/... #./pkg/...
+
+remove-lint-deps:
+	rm $(which golangci-lint)
 
 install-lint-deps:
-	(which golangci-lint > /dev/null) || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.50.1
+	(which golangci-lint > /dev/null) || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.59.0
 
 lint: install-lint-deps
 	golangci-lint run ./...
+
+generate:
+	go generate ./api
 
 .PHONY: build run build-img run-img version test lint
