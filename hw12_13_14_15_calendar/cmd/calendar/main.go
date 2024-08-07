@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"sync"
 	"syscall"
 	"time"
@@ -45,6 +46,16 @@ func main() {
 		logger.WithLevel(config.Logger.Level),
 	)
 
+	defer func() {
+		if p := recover(); p != nil {
+			logg.Errorf(
+				"panic recovered: %s; stack trace: %s",
+				p,
+				string(debug.Stack()),
+			)
+		}
+	}()
+
 	var storage storage.Storage
 
 	if config.DB.Use {
@@ -53,7 +64,9 @@ func main() {
 			sqlstorage.WithLogger(logg),
 		)
 	} else {
-		storage = memorystorage.New()
+		storage = memorystorage.New(
+			memorystorage.WithLogger(logg),
+		)
 	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
