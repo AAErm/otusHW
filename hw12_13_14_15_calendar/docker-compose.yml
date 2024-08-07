@@ -17,5 +17,14 @@ services:
     ports:
       - "5435:5432"
 
+  amqp:
+    image: rabbitmq:3-management-alpine
+    volumes:
+      - ./testdata/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./testdata/rabbitmq.json:/etc/rabbitmq/definitions.json
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
 volumes:
   calendar-data:

@@ -21,6 +21,10 @@ type Storage interface {
 	ListEventByDay(context.Context, time.Time) ([]Event, error)
 	ListEventsByWeek(context.Context, time.Time) ([]Event, error)
 	ListEventsByMonth(context.Context, time.Time) ([]Event, error)
+	GetEventsForNotification(context.Context, time.Time, time.Time) ([]Event, error)
+	DeleteExpiredEvents(context.Context) error
+
+	AddNotification(ctx context.Context, eventID ID) error
 }
 
 var (
