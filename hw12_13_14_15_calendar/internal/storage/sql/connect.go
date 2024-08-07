@@ -14,7 +14,7 @@ var (
 )
 
 func conn(ctx context.Context, conf config.DBConf) (*pgxpool.Pool, error) {
-	connString := fmt.Sprintf("postgres://%s:%s@%s:%d", conf.User, conf.Password, conf.Host, conf.Port)
+	connString := fmt.Sprintf("postgres://%s:%s@%s:%d/%s", conf.User, conf.Password, conf.Host, conf.Port, conf.DbName)
 	poolConfig, err := pgxpool.ParseConfig(connString)
 	if err != nil {
 		return nil, err

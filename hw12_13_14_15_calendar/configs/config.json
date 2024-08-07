@@ -3,17 +3,43 @@
         "level": "INFO"
     },
     "server": {
-        "host": "localhost",
+        "host": "",
         "port": 8080
     },
     "db": {
-        "use": false,
-        "host": "localhost",
-        "port": 5435,
+        "use": true,
+        "host": "postgresql",
+        "port": 5432,
         "user": "root",
-        "password": "qwerty"
+        "password": "qwerty",
+        "db_name": "calendar"
     },
     "grpc": {
         "host": ":50051"
+    },
+    "amqp": {
+        "dsn": "amqp://guest:guest@amqp:5672/",
+        "service_name": "calendar",
+        "mt_config": {
+            "services": {
+                "calendar": {
+                    "exchange": {
+                        "name": "amq.direct",
+                        "type": "direct",
+                        "durable": true,
+                        "queue": {
+                            "name": "calendar",
+                            "durable": true
+                        },
+                        "binding": {
+                            "key": "calendar"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "scheduler": {
+        "interval": 10
     }
 }
